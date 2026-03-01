@@ -58,39 +58,6 @@ export default function ARMeasureScreen({ navigation, route }) {
   const [pixelsPerInch, setPixelsPerInch] = useState(null);
   const cameraRef = useRef(null);
 
-  // ─── Permission Check ──────────────────────────────────────────
-  if (!permission) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>Requesting camera access...</Text>
-      </View>
-    );
-  }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.permissionCard}>
-          <Text style={{ fontSize: 48, marginBottom: 16 }}>📷</Text>
-          <Text style={styles.permTitle}>Camera Access Needed</Text>
-          <Text style={styles.permDesc}>
-            ClosetCraft needs camera access to photograph your closet walls for measurement.
-            Your photos stay on your device.
-          </Text>
-          <TouchableOpacity style={styles.primaryBtn} onPress={requestPermission}>
-            <Text style={styles.primaryBtnText}>Grant Camera Access</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.secondaryBtn}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.secondaryBtnText}>Use Manual Measurements Instead</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
   // ─── Capture Photo ─────────────────────────────────────────────
   const takePhoto = async () => {
     if (!cameraRef.current) return;
@@ -137,7 +104,7 @@ export default function ARMeasureScreen({ navigation, route }) {
         const dy = newMeasurePoints[1].y - newMeasurePoints[0].y;
         const pixelDist = Math.sqrt(dx * dx + dy * dy);
         const realInches = Math.round(pixelDist / pixelsPerInch);
-        
+
         const key = ['width', 'height', 'depth'][currentMeasurement];
         const newMeasurements = { ...measurements, [key]: realInches };
         setMeasurements(newMeasurements);
@@ -159,6 +126,39 @@ export default function ARMeasureScreen({ navigation, route }) {
       }
     }
   }, [step, refPoints, measurePoints, pixelsPerInch, referenceObj, currentMeasurement, measurements]);
+
+  // ─── Permission Check ──────────────────────────────────────────
+  if (!permission) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loadingText}>Requesting camera access...</Text>
+      </View>
+    );
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.permissionCard}>
+          <Text style={{ fontSize: 48, marginBottom: 16 }}>📷</Text>
+          <Text style={styles.permTitle}>Camera Access Needed</Text>
+          <Text style={styles.permDesc}>
+            ClosetCraft needs camera access to photograph your closet walls for measurement.
+            Your photos stay on your device.
+          </Text>
+          <TouchableOpacity style={styles.primaryBtn} onPress={requestPermission}>
+            <Text style={styles.primaryBtnText}>Grant Camera Access</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.secondaryBtn}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.secondaryBtnText}>Use Manual Measurements Instead</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   // ─── Render Intro ──────────────────────────────────────────────
   if (step === 'intro') {
