@@ -185,4 +185,25 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  designerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 56,
+    paddingBottom: 12,
+  },
+  designerBackBtn: {
+    width: 60,
+  },
+  designerBackText: {
+    color: '#e2b97f',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  designerHeaderTitle: {
+    color: '#f0e6d3',
+    fontSize: 17,
+    fontWeight: '700',
+  },
 });

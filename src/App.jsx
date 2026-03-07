@@ -41,6 +41,9 @@ import ShareDesignScreen from './screens/ShareDesignScreen';
 import CostEstimateScreen from './screens/CostEstimateScreen';
 import ShoppingListScreen from './screens/ShoppingListScreen';
 import CutListScreen from './screens/CutListScreen';
+
+// Component Picker
+import ComponentPickerScreen from './screens/ComponentPickerScreen';
 import styles from './App.styles';
 
 // ─── Navigation ───────────────────────────────────────────────────
@@ -154,8 +157,14 @@ function HomeScreen({ navigation }) {
 function NewDesignScreen({ navigation }) {
   return (
     <View style={styles.screen}>
+      <View style={styles.designerHeader}>
+        <TouchableOpacity style={styles.designerBackBtn} onPress={() => navigation.goBack()}>
+          <Text style={styles.designerBackText}>‹ Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.designerHeaderTitle}>New Design</Text>
+        <View style={styles.designerBackBtn} />
+      </View>
       <ScrollView contentContainerStyle={styles.centeredContent}>
-        <Text style={styles.screenTitle}>New Design</Text>
         <Text style={styles.screenDesc}>
           This screen contains the room type selector, closet type picker,
           and manual measurement input — adapted for React Native with native
@@ -205,8 +214,14 @@ function DesignerScreen({ navigation, route }) {
   const design = route.params?.design;
   return (
     <View style={[styles.screen, { backgroundColor: '#12121e' }]}>
+      <View style={styles.designerHeader}>
+        <TouchableOpacity style={styles.designerBackBtn} onPress={() => navigation.goBack()}>
+          <Text style={styles.designerBackText}>‹ Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.designerHeaderTitle}>2D Designer</Text>
+        <View style={styles.designerBackBtn} />
+      </View>
       <ScrollView contentContainerStyle={styles.centeredContent}>
-        <Text style={styles.screenTitle}>2D Designer</Text>
         <Text style={styles.screenDesc}>
           Full drag-and-drop designer canvas with:
         </Text>
@@ -238,8 +253,17 @@ function DesignerScreen({ navigation, route }) {
           </View>
         )}
 
-        {/* Phase 3 actions accessible from Designer */}
+        {/* Add / Edit components */}
         {design && (
+          <PrimaryButton
+            title="🧩 Add Components"
+            onPress={() => navigation.navigate('ComponentPicker', { design })}
+            style={{ marginBottom: 4 }}
+          />
+        )}
+
+        {/* Phase 3 actions — only available once components exist */}
+        {design && design.components?.length > 0 ? (
           <View style={{ width: '100%', gap: 10, marginTop: 4 }}>
             <PrimaryButton
               title="💰 Cost Estimate"
@@ -256,7 +280,11 @@ function DesignerScreen({ navigation, route }) {
               onPress={() => navigation.navigate('ShareDesign', { design })}
             />
           </View>
-        )}
+        ) : design ? (
+          <Text style={[styles.screenDesc, { textAlign: 'center', color: '#556677', marginTop: 8 }]}>
+            Add components above to unlock Cost Estimate, Before & After, and Share.
+          </Text>
+        ) : null}
       </ScrollView>
     </View>
   );
@@ -375,6 +403,9 @@ export default function App() {
         {/* Phase 3.1 — Cloud Sync */}
         <Stack.Screen name="Auth" component={AuthScreen} />
         <Stack.Screen name="ShareDesign" component={ShareDesignScreen} />
+
+        {/* Component Picker */}
+        <Stack.Screen name="ComponentPicker" component={ComponentPickerScreen} />
 
         {/* Phase 3.2 — Cost Estimator */}
         <Stack.Screen name="CostEstimate" component={CostEstimateScreen} />

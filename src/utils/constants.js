@@ -379,6 +379,6 @@ export const snapToGrid = (val, grid = GRID.snapSize) => Math.round(val / grid) 
 // ─── Supabase Config (Phase 3.1) ──────────────────────────────────
 // Replace these placeholder values with your real Supabase project credentials
 export const SUPABASE_CONFIG = {
-  url: 'YOUR_SUPABASE_URL',
-  anonKey: 'YOUR_SUPABASE_ANON_KEY',
+  url: 'https://iahfiwvrgfivtgujeecu.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhaGZpd3ZyZ2ZpdnRndWplZWN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2MDgwMTAsImV4cCI6MjA4NjE4NDAxMH0.sBYdp1qUQeLOAiRQNaqIujRaB3ugEelJn06HuLookgs',
 };
