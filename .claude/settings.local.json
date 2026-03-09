@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx expo install expo-apple-authentication expo-auth-session expo-web-browser)"
+    ]
+  }
+}

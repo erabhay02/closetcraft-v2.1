@@ -15,18 +15,20 @@ export default StyleSheet.create({
   doneBtnText: { color: COLORS.gold, fontSize: 15, fontWeight: '700' },
   categoryBar: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   categoryContent: {
-    paddingHorizontal: 16, paddingVertical: 10, gap: 8, flexDirection: 'row',
+    paddingHorizontal: 16, paddingVertical: 10, flexDirection: 'row',
+    alignItems: 'center',
   },
   categoryChip: {
     flexDirection: 'row', alignItems: 'center', gap: 5,
     paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20,
     backgroundColor: COLORS.bgCard, borderWidth: 1, borderColor: COLORS.border,
+    flexShrink: 0, marginRight: 8,
   },
   categoryChipActive: {
     backgroundColor: COLORS.goldMuted, borderColor: COLORS.borderActive,
   },
   categoryChipIcon: { fontSize: 14 },
-  categoryChipText: { color: COLORS.textMuted, fontSize: 13, fontWeight: '600' },
+  categoryChipText: { color: COLORS.textMuted, fontSize: 13, fontWeight: '600', flexShrink: 0 },
   categoryChipTextActive: { color: COLORS.gold },
   list: { padding: 16, gap: 8, paddingBottom: 40 },
   item: {

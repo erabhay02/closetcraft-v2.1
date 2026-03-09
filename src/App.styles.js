@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#0f1019',
+    backgroundColor: '#07111f',
   },
   homeContent: {
     padding: 24,
@@ -21,12 +21,12 @@ export default StyleSheet.create({
   homeTitle: {
     fontSize: 34,
     fontWeight: '800',
-    color: '#f0e6d3',
+    color: '#e8f4ff',
     marginBottom: 12,
   },
   homeSubtitle: {
     fontSize: 15,
-    color: '#8899b0',
+    color: '#7baac8',
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 8,
@@ -35,7 +35,7 @@ export default StyleSheet.create({
     marginBottom: 28,
   },
   sectionLabel: {
-    color: '#556677',
+    color: '#405570',
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.8,
@@ -49,30 +49,30 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   btnPrimary: {
-    backgroundColor: '#e2b97f',
+    backgroundColor: '#00d4f5',
   },
   btnOutline: {
     borderWidth: 1.5,
-    borderColor: 'rgba(226,185,127,0.4)',
+    borderColor: 'rgba(0,212,245,0.35)',
   },
   btnTextPrimary: {
-    color: '#1a1a2e',
+    color: '#07111f',
     fontSize: 16,
     fontWeight: '700',
   },
   btnTextOutline: {
-    color: '#e2b97f',
+    color: '#00d4f5',
     fontSize: 16,
     fontWeight: '700',
   },
   featureCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#181825',
+    backgroundColor: '#0d1f38',
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
+    borderColor: 'rgba(255,255,255,0.08)',
     gap: 14,
   },
   featureCardIcon: {
@@ -84,22 +84,22 @@ export default StyleSheet.create({
     flex: 1,
   },
   featureCardTitle: {
-    color: '#f0e6d3',
+    color: '#e8f4ff',
     fontSize: 15,
     fontWeight: '700',
     marginBottom: 4,
   },
   featureCardDesc: {
-    color: '#8899b0',
+    color: '#7baac8',
     fontSize: 12,
     lineHeight: 17,
   },
   featureCardArrow: {
-    color: '#556677',
+    color: '#405570',
     fontSize: 22,
   },
   versionBadge: {
-    color: '#556677',
+    color: '#405570',
     fontSize: 12,
     textAlign: 'center',
     marginTop: 8,
@@ -111,13 +111,13 @@ export default StyleSheet.create({
     gap: 12,
   },
   screenTitle: {
-    color: '#f0e6d3',
+    color: '#e8f4ff',
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 8,
   },
   screenDesc: {
-    color: '#8899b0',
+    color: '#7baac8',
     fontSize: 14,
     lineHeight: 22,
     marginBottom: 8,
@@ -127,7 +127,7 @@ export default StyleSheet.create({
     marginBottom: 24,
   },
   featureItem: {
-    color: '#7b9e6b',
+    color: '#4caf50',
     fontSize: 13,
   },
   designSummary: {
@@ -135,30 +135,30 @@ export default StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
+    borderColor: 'rgba(255,255,255,0.08)',
     marginBottom: 16,
   },
   designSummaryTitle: {
-    color: '#e2b97f',
+    color: '#00d4f5',
     fontWeight: '700',
     fontSize: 14,
     marginBottom: 8,
   },
   designSummaryRow: {
-    color: '#8899b0',
+    color: '#7baac8',
     fontSize: 13,
     marginBottom: 2,
   },
   settingsScreen: {
     flex: 1,
-    backgroundColor: '#0f1019',
+    backgroundColor: '#07111f',
     padding: 24,
     paddingTop: 60,
   },
   settingsTitle: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#f0e6d3',
+    color: '#e8f4ff',
     marginBottom: 24,
   },
   settingsRow: {
@@ -167,21 +167,21 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.04)',
+    borderBottomColor: 'rgba(255,255,255,0.05)',
   },
   settingsRowTappable: {
     marginTop: 8,
   },
   settingsLabel: {
-    color: '#f0e6d3',
+    color: '#e8f4ff',
     fontSize: 15,
   },
   settingsValue: {
-    color: '#8899b0',
+    color: '#7baac8',
     fontSize: 14,
   },
   settingsArrow: {
-    color: '#e2b97f',
+    color: '#00d4f5',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -197,12 +197,12 @@ export default StyleSheet.create({
     width: 60,
   },
   designerBackText: {
-    color: '#e2b97f',
+    color: '#00d4f5',
     fontSize: 15,
     fontWeight: '600',
   },
   designerHeaderTitle: {
-    color: '#f0e6d3',
+    color: '#e8f4ff',
     fontSize: 17,
     fontWeight: '700',
   },

@@ -13,7 +13,7 @@
  * Tech Stack: React Native + Expo SDK 54, React Navigation v7
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -21,12 +21,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   Text, View, TouchableOpacity, ScrollView,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { STORAGE_KEYS } from './utils/constants';
 
 // ─── Screens ──────────────────────────────────────────────────────
 
 // Phase 2.x
 import SavedDesignsScreen from './screens/SavedDesignsScreen';
 import ARMeasureScreen from './screens/ARMeasureScreen';
+import NewDesignScreen from './screens/NewDesignScreen';
+import DesignerScreen from './screens/DesignerScreen';
 
 // Phase 3.0 — AI + Templates
 import AIWizardScreen from './screens/AIWizardScreen';
@@ -41,6 +45,9 @@ import ShareDesignScreen from './screens/ShareDesignScreen';
 import CostEstimateScreen from './screens/CostEstimateScreen';
 import ShoppingListScreen from './screens/ShoppingListScreen';
 import CutListScreen from './screens/CutListScreen';
+
+// Onboarding
+import OnboardingScreen from './screens/OnboardingScreen';
 
 // Component Picker
 import ComponentPickerScreen from './screens/ComponentPickerScreen';
@@ -152,144 +159,6 @@ function HomeScreen({ navigation }) {
   );
 }
 
-// ─── New Design Screen ────────────────────────────────────────────
-
-function NewDesignScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <View style={styles.designerHeader}>
-        <TouchableOpacity style={styles.designerBackBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.designerBackText}>‹ Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.designerHeaderTitle}>New Design</Text>
-        <View style={styles.designerBackBtn} />
-      </View>
-      <ScrollView contentContainerStyle={styles.centeredContent}>
-        <Text style={styles.screenDesc}>
-          This screen contains the room type selector, closet type picker,
-          and manual measurement input — adapted for React Native with native
-          gestures and haptic feedback.
-        </Text>
-        <PrimaryButton
-          title="Open Designer →"
-          onPress={() => navigation.navigate('Designer', {
-            design: {
-              name: 'My Closet',
-              roomType: 'primary',
-              closetType: 'walkin',
-              measurements: { width: 96, height: 96, depth: 72 },
-              material: 'melamine-white',
-              components: [],
-            },
-          })}
-        />
-        <View style={{ marginTop: 12 }}>
-          <PrimaryButton
-            title="📷 Use Camera Instead"
-            variant="outline"
-            onPress={() => navigation.navigate('ARMeasure', {
-              onMeasured: (measurements) => {
-                navigation.navigate('Designer', {
-                  design: {
-                    name: 'Camera Measured Closet',
-                    roomType: 'primary',
-                    closetType: 'reachin',
-                    measurements,
-                    material: 'melamine-white',
-                    components: [],
-                  },
-                });
-              },
-            })}
-          />
-        </View>
-      </ScrollView>
-    </View>
-  );
-}
-
-// ─── Designer Screen ──────────────────────────────────────────────
-
-function DesignerScreen({ navigation, route }) {
-  const design = route.params?.design;
-  return (
-    <View style={[styles.screen, { backgroundColor: '#12121e' }]}>
-      <View style={styles.designerHeader}>
-        <TouchableOpacity style={styles.designerBackBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.designerBackText}>‹ Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.designerHeaderTitle}>2D Designer</Text>
-        <View style={styles.designerBackBtn} />
-      </View>
-      <ScrollView contentContainerStyle={styles.centeredContent}>
-        <Text style={styles.screenDesc}>
-          Full drag-and-drop designer canvas with:
-        </Text>
-        <View style={styles.featureList}>
-          {[
-            '✓ Native gesture handling (pan, pinch, long-press)',
-            '✓ Material/color selection for components',
-            '✓ Save & auto-save to device',
-            '✓ PDF export with layout diagram',
-            '✓ 3D preview with rotation',
-            '✓ Undo/redo support',
-            '✓ Component snap-to-grid',
-          ].map((f, i) => (
-            <Text key={i} style={styles.featureItem}>{f}</Text>
-          ))}
-        </View>
-
-        {design && (
-          <View style={styles.designSummary}>
-            <Text style={styles.designSummaryTitle}>Current Design</Text>
-            <Text style={styles.designSummaryRow}>Name: {design.name}</Text>
-            <Text style={styles.designSummaryRow}>Type: {design.closetType}</Text>
-            <Text style={styles.designSummaryRow}>
-              Size: {design.measurements?.width}"W × {design.measurements?.height}"H × {design.measurements?.depth}"D
-            </Text>
-            <Text style={styles.designSummaryRow}>
-              Components: {design.components?.length ?? 0}
-            </Text>
-          </View>
-        )}
-
-        {/* Add / Edit components */}
-        {design && (
-          <PrimaryButton
-            title="🧩 Add Components"
-            onPress={() => navigation.navigate('ComponentPicker', { design })}
-            style={{ marginBottom: 4 }}
-          />
-        )}
-
-        {/* Phase 3 actions — only available once components exist */}
-        {design && design.components?.length > 0 ? (
-          <View style={{ width: '100%', gap: 10, marginTop: 4 }}>
-            <PrimaryButton
-              title="💰 Cost Estimate"
-              onPress={() => navigation.navigate('CostEstimate', { design })}
-            />
-            <PrimaryButton
-              title="📸 Before & After"
-              variant="outline"
-              onPress={() => navigation.navigate('BeforeAfter', { design })}
-            />
-            <PrimaryButton
-              title="🔗 Share Design"
-              variant="outline"
-              onPress={() => navigation.navigate('ShareDesign', { design })}
-            />
-          </View>
-        ) : design ? (
-          <Text style={[styles.screenDesc, { textAlign: 'center', color: '#556677', marginTop: 8 }]}>
-            Add components above to unlock Cost Estimate, Before & After, and Share.
-          </Text>
-        ) : null}
-      </ScrollView>
-    </View>
-  );
-}
-
 // ─── Settings Screen ──────────────────────────────────────────────
 
 function SettingsScreen({ navigation }) {
@@ -334,14 +203,14 @@ function MainTabs() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#181825',
-          borderTopColor: 'rgba(255,255,255,0.06)',
+          backgroundColor: '#0d1f38',
+          borderTopColor: 'rgba(255,255,255,0.08)',
           height: 85,
           paddingBottom: 28,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: '#e2b97f',
-        tabBarInactiveTintColor: '#556677',
+        tabBarActiveTintColor: '#00d4f5',
+        tabBarInactiveTintColor: '#405570',
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600',
@@ -377,16 +246,35 @@ function MainTabs() {
 // ─── Root App ─────────────────────────────────────────────────────
 
 export default function App() {
+  const [initialRoute, setInitialRoute] = useState(null);
+
+  useEffect(() => {
+    Promise.all([
+      AsyncStorage.getItem(STORAGE_KEYS.onboarded),
+      AsyncStorage.getItem(STORAGE_KEYS.authDone),
+    ]).then(([onboarded, authDone]) => {
+      if (!onboarded) setInitialRoute('Onboarding');
+      else if (!authDone) setInitialRoute('Auth');
+      else setInitialRoute('Main');
+    }).catch(() => setInitialRoute('Onboarding'));
+  }, []);
+
+  if (!initialRoute) return null; // brief splash while checking storage
+
   return (
     <NavigationContainer>
       <StatusBar style="light" />
       <Stack.Navigator
+        initialRouteName={initialRoute}
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#0f1019' },
+          contentStyle: { backgroundColor: '#07111f' },
           animation: 'slide_from_right',
         }}
       >
+        {/* Onboarding — shown once on fresh install */}
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ animation: 'fade' }} />
+
         {/* Main tab container */}
         <Stack.Screen name="Main" component={MainTabs} />
 
@@ -401,7 +289,7 @@ export default function App() {
         <Stack.Screen name="BeforeAfter" component={BeforeAfterScreen} />
 
         {/* Phase 3.1 — Cloud Sync */}
-        <Stack.Screen name="Auth" component={AuthScreen} />
+        <Stack.Screen name="Auth" component={AuthScreen} options={{ animation: 'fade' }} />
         <Stack.Screen name="ShareDesign" component={ShareDesignScreen} />
 
         {/* Component Picker */}

@@ -1,14 +1,14 @@
 /**
- * ClosetCraft Phase 3.1 — Authentication Service
+ * ClosetCraft — Authentication Service
  *
- * Wraps Supabase Auth. All methods are safe to call when Supabase
- * is not yet configured — they return { user: null, error } gracefully.
- *
- * Apple Sign In & Google Sign In stubs require native setup:
- *   - expo-apple-authentication (iOS only)
- *   - @react-native-google-signin/google-signin
+ * Wraps Supabase Auth for:
+ *   - Email / Password sign-in and sign-up
+ *   - Apple Sign In (iOS 13+, via expo-apple-authentication)
+ *   - Google Sign In (via expo-auth-session, token passed from AuthScreen hook)
  */
 
+import { Platform } from 'react-native';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { supabase } from '../config/supabase';
 
 const isConfigured = () => {
@@ -18,33 +18,22 @@ const isConfigured = () => {
 
 // ─── Email / Password ─────────────────────────────────────────────
 
-/**
- * Create a new account.
- * @returns {{ user, session, error }}
- */
 export async function signUp(email, password) {
   if (!isConfigured()) {
-    return { user: null, session: null, error: { message: 'Cloud sync not yet configured. See src/config/supabase.js for setup instructions.' } };
+    return { user: null, session: null, error: { message: 'Cloud sync not yet configured.' } };
   }
   const { data, error } = await supabase.auth.signUp({ email, password });
   return { user: data?.user ?? null, session: data?.session ?? null, error };
 }
 
-/**
- * Sign in with email and password.
- * @returns {{ user, session, error }}
- */
 export async function signIn(email, password) {
   if (!isConfigured()) {
-    return { user: null, session: null, error: { message: 'Cloud sync not yet configured. See src/config/supabase.js for setup instructions.' } };
+    return { user: null, session: null, error: { message: 'Cloud sync not yet configured.' } };
   }
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   return { user: data?.user ?? null, session: data?.session ?? null, error };
 }
 
-/**
- * Sign out the current user.
- */
 export async function signOut() {
   if (!isConfigured()) return;
   await supabase.auth.signOut();
@@ -52,42 +41,90 @@ export async function signOut() {
 
 // ─── Session ──────────────────────────────────────────────────────
 
-/**
- * Get the currently signed-in user (or null).
- */
 export async function getCurrentUser() {
   if (!isConfigured()) return null;
   const { data } = await supabase.auth.getUser();
   return data?.user ?? null;
 }
 
-/**
- * Subscribe to auth state changes.
- * @param {function} callback - called with (event, session)
- * @returns {function} unsubscribe
- */
 export function onAuthStateChange(callback) {
   if (!isConfigured()) return () => {};
   const { data } = supabase.auth.onAuthStateChange(callback);
   return () => data?.subscription?.unsubscribe?.();
 }
 
-// ─── Social Sign-In Stubs ─────────────────────────────────────────
+// ─── Apple Sign In ────────────────────────────────────────────────
 
 /**
- * Apple Sign In — requires expo-apple-authentication (iOS only).
- * Returns an error until native setup is complete.
+ * Full Apple Sign In flow using expo-apple-authentication.
+ * iOS 13+ only. Returns { user, session, error } or { user: null, error: null }
+ * if the user cancelled.
+ *
+ * Prerequisites:
+ *   - app.json: ios.usesAppleSignIn = true  ✅
+ *   - Supabase dashboard: Authentication → Providers → Apple → enabled
+ *   - Supabase Apple config: Service ID + secret key from Apple Developer portal
  */
 export async function signInWithApple() {
-  console.warn('[ClosetCraft] Apple Sign In requires native setup. See: https://docs.expo.dev/versions/latest/sdk/apple-authentication/');
-  return { user: null, error: { message: 'Apple Sign In requires additional native setup. Coming soon!' } };
+  if (Platform.OS !== 'ios') {
+    return { user: null, error: { message: 'Apple Sign In is only available on iOS.' } };
+  }
+
+  try {
+    const available = await AppleAuthentication.isAvailableAsync();
+    if (!available) {
+      return { user: null, error: { message: 'Apple Sign In is not available on this device.' } };
+    }
+
+    const credential = await AppleAuthentication.signInAsync({
+      requestedScopes: [
+        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+      ],
+    });
+
+    if (!credential.identityToken) {
+      return { user: null, error: { message: 'Apple did not return an identity token.' } };
+    }
+
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: 'apple',
+      token: credential.identityToken,
+    });
+
+    return { user: data?.user ?? null, session: data?.session ?? null, error };
+  } catch (err) {
+    // ERR_REQUEST_CANCELED = user tapped Cancel — not an error we should surface
+    if (err.code === 'ERR_REQUEST_CANCELED') {
+      return { user: null, error: null };
+    }
+    return { user: null, error: { message: err.message ?? 'Apple Sign In failed.' } };
+  }
 }
 
+// ─── Google Sign In ───────────────────────────────────────────────
+
 /**
- * Google Sign In — requires @react-native-google-signin/google-signin.
- * Returns an error until native setup is complete.
+ * Accepts the id_token returned by expo-auth-session's Google.useAuthRequest hook
+ * (handled in AuthScreen) and passes it to Supabase.
+ *
+ * Prerequisites:
+ *   - Google Cloud Console: OAuth 2.0 Client IDs created for iOS + Android + Web
+ *   - Supabase dashboard: Authentication → Providers → Google → enabled
+ *   - Client IDs entered in AuthScreen GOOGLE_CLIENT_IDS constants
  */
-export async function signInWithGoogle() {
-  console.warn('[ClosetCraft] Google Sign In requires native setup. See: https://react-native-google-signin.github.io/');
-  return { user: null, error: { message: 'Google Sign In requires additional native setup. Coming soon!' } };
+export async function signInWithGoogleIdToken(idToken) {
+  if (!isConfigured()) {
+    return { user: null, error: { message: 'Cloud sync not yet configured.' } };
+  }
+  if (!idToken) {
+    return { user: null, error: { message: 'No Google ID token provided.' } };
+  }
+
+  const { data, error } = await supabase.auth.signInWithIdToken({
+    provider: 'google',
+    token: idToken,
+  });
+
+  return { user: data?.user ?? null, session: data?.session ?? null, error };
 }

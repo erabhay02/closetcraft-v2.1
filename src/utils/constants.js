@@ -1,31 +1,35 @@
 // ─── Theme Colors ─────────────────────────────────────────────────
 export const COLORS = {
-  // Primary palette
-  bg: '#0f1019',
-  bgCard: '#181825',
-  bgElevated: '#1e1e30',
-  bgOverlay: 'rgba(0,0,0,0.6)',
-  
-  // Brand
-  gold: '#e2b97f',
-  goldDark: '#c49a5c',
-  goldLight: '#f0d4a8',
-  goldMuted: 'rgba(226,185,127,0.15)',
-  
+  // Primary palette — dark navy
+  bg: '#07111f',
+  bgCard: '#0d1f38',
+  bgElevated: '#142845',
+  bgOverlay: 'rgba(0,0,0,0.65)',
+
+  // Brand — cyan (replaces gold throughout the app)
+  gold: '#00d4f5',
+  goldDark: '#0099bb',
+  goldLight: '#80eeff',
+  goldMuted: 'rgba(0,212,245,0.12)',
+
+  // Gradient colours (used in auth header and hero areas)
+  gradientStart: '#00e5ff',
+  gradientEnd: '#1565c0',
+
   // Accent
-  blue: '#6b8e9e',
-  green: '#7b9e6b',
-  red: '#c45c5c',
-  purple: '#9e6b8e',
-  
-  // Text
-  textPrimary: '#f0e6d3',
-  textSecondary: '#8899b0',
-  textMuted: '#556677',
-  
+  blue: '#1e90ff',
+  green: '#4caf50',
+  red: '#ef5350',
+  purple: '#9c6bce',
+
+  // Text — cool white
+  textPrimary: '#e8f4ff',
+  textSecondary: '#7baac8',
+  textMuted: '#405570',
+
   // Borders
-  border: 'rgba(255,255,255,0.06)',
-  borderActive: 'rgba(226,185,127,0.4)',
+  border: 'rgba(255,255,255,0.08)',
+  borderActive: 'rgba(0,212,245,0.35)',
 };
 
 // ─── Typography ───────────────────────────────────────────────────
@@ -360,6 +364,7 @@ export const STORAGE_KEYS = {
   settings: 'closetcraft_settings',
   onboarded: 'closetcraft_onboarded',
   lastDesign: 'closetcraft_last_design',
+  authDone: 'closetcraft_auth_done',
 };
 
 // ─── Helper Functions ─────────────────────────────────────────────
